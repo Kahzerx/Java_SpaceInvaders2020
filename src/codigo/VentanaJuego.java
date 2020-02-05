@@ -23,6 +23,7 @@ public class VentanaJuego extends javax.swing.JFrame {
     
     int alienRow = 5;
     int alienColumn = 10;
+    int counter = 0;
     
     BufferedImage buffer = null;
     
@@ -53,8 +54,16 @@ public class VentanaJuego extends javax.swing.JFrame {
         Graphics2D g2 = (Graphics2D) buffer.getGraphics();
         g2.setColor(Color.BLACK);
         g2.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        
-        g2.drawImage(myAlien.image, 10, 10, null);
+        counter ++;
+        if (counter < 50){
+            g2.drawImage(myAlien.image1, 10, 10, null);
+        }
+        else if(counter < 100){
+            g2.drawImage(myAlien.image2, 10, 10, null);
+        }
+        else{
+            counter = 0;
+        }
         
         g2 = (Graphics2D) jPanel1.getGraphics();
         g2.drawImage(buffer, 0, 0, null);

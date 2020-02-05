@@ -34,6 +34,9 @@ public class VentanaJuego extends javax.swing.JFrame {
             
         }
     });
+    
+    Marciano myAlien = new Marciano(SCREEN_WIDTH);
+    
     /**
      * Creates new form VentanaJuego
      */
@@ -50,6 +53,8 @@ public class VentanaJuego extends javax.swing.JFrame {
         Graphics2D g2 = (Graphics2D) buffer.getGraphics();
         g2.setColor(Color.BLACK);
         g2.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        
+        g2.drawImage(myAlien.image, 10, 10, null);
         
         g2 = (Graphics2D) jPanel1.getGraphics();
         g2.drawImage(buffer, 0, 0, null);

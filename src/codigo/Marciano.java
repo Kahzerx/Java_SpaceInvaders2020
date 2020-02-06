@@ -29,7 +29,7 @@ public class Marciano {
         } 
         
         catch (Exception e) {
-            System.out.println("Unable to read image.");
+            System.out.println("Unable to read Alien image.");
         }
     }
     

@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import javax.swing.Timer;
+import java.awt.event.KeyEvent;
+
 
 /**
  *
@@ -37,6 +39,8 @@ public class VentanaJuego extends javax.swing.JFrame {
     });
     
     Marciano myAlien = new Marciano(SCREEN_WIDTH);
+    Ship myShip = new Ship();
+    Shot myShot = new Shot();
     
     /**
      * Creates new form VentanaJuego
@@ -48,6 +52,9 @@ public class VentanaJuego extends javax.swing.JFrame {
         buffer.createGraphics();
         
         temp.start();
+        
+        myShip.posX = SCREEN_WIDTH /2 - myShip.image.getWidth(this)/2;
+        myShip.posY = SCREEN_HEIGHT - 100;
     }
     
     private void gameLoop(){
@@ -65,6 +72,11 @@ public class VentanaJuego extends javax.swing.JFrame {
             counter = 0;
         }
         
+        g2.drawImage(myShip.image, myShip.posX, myShip.posY, null);
+        g2.drawImage(myShot.image, myShot.posX, myShot.posY, null);
+        myShip.move();
+        myShot.move();
+        
         g2 = (Graphics2D) jPanel1.getGraphics();
         g2.drawImage(buffer, 0, 0, null);
     }
@@ -81,16 +93,24 @@ public class VentanaJuego extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                formKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 800, Short.MAX_VALUE)
+            .addGap(0, 400, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 600, Short.MAX_VALUE)
+            .addGap(0, 300, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -106,6 +126,22 @@ public class VentanaJuego extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
+        switch(evt.getKeyCode()){
+            case KeyEvent.VK_LEFT : myShip.setLeftPressed(true); break;
+            case KeyEvent.VK_RIGHT : myShip.setRightPressed(true); break;
+            case KeyEvent.VK_SPACE : myShot.posX = myShip.posX;myShot.posY = myShip.posY;break;
+        }
+    }//GEN-LAST:event_formKeyPressed
+    private void formKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyReleased
+        switch(evt.getKeyCode()){
+            case KeyEvent.VK_LEFT : myShip.setLeftPressed(false); break;
+            case KeyEvent.VK_RIGHT : myShip.setRightPressed(false); break;
+
+        }
+    }//GEN-LAST:event_formKeyReleased
+
 
     /**
      * @param args the command line arguments

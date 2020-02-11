@@ -18,12 +18,6 @@ public class Ship {
     
     
     public Ship(){
-            try{
-                image=ImageIO.read(getClass().getResource("/imagenes/nave.png"));
-            }
-            catch(Exception e){
-                System.out.println("Unable to read Ship image");
-            }
     }
     
     public void move(){

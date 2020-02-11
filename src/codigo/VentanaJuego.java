@@ -68,11 +68,17 @@ public class VentanaJuego extends javax.swing.JFrame {
                 images[i*4 + j] = template.getSubimage(j * 64, i * 64, 64, 64).getScaledInstance(32, 32, Image.SCALE_SMOOTH);
             }
         }
+        
+        images[20] = template.getSubimage(0, 320, 66, 32);
+        images[21] = template.getSubimage(66, 320, 64, 32);
+        
         setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         buffer = (BufferedImage) jPanel1.createImage(SCREEN_WIDTH, SCREEN_HEIGHT);
         buffer.createGraphics();
         
         temp.start();
+        
+        myShip.image = images[20];
         
         myShip.posX = SCREEN_WIDTH /2 - myShip.image.getWidth(this)/2;
         myShip.posY = SCREEN_HEIGHT - 100;
@@ -80,8 +86,8 @@ public class VentanaJuego extends javax.swing.JFrame {
         for (int i = 0; i < alienRow; i++) {
             for (int j = 0; j < alienColumn; j++) {
                 alienList[i][j] = new Alien(SCREEN_WIDTH);
-                alienList[i][j].image1 = images[2];
-                alienList[i][j].image2 = images[3];
+                alienList[i][j].image1 = images[2*i];
+                alienList[i][j].image2 = images[2*i+1];
                 alienList[i][j].posX = j * (15 + alienList[i][j].image1.getWidth(null));
                 alienList[i][j].posY = i * (10 + alienList[i][j].image1.getHeight(null));
             }

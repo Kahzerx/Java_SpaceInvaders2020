@@ -26,14 +26,6 @@ public class Alien {
     
     public Alien (int _screenWidth){
         screenWidth = _screenWidth;
-        try {
-            image1 = ImageIO.read(getClass().getResource("/imagenes/marcianito1.png"));
-            image2 = ImageIO.read(getClass().getResource("/imagenes/marcianito2.png"));
-        } 
-        
-        catch (Exception e) {
-            System.out.println("Unable to read Alien image.");
-        }
     }
     
     public void move (boolean direction){

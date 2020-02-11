@@ -7,12 +7,17 @@ package codigo;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import javax.swing.Timer;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D; 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 
 /**
@@ -29,6 +34,8 @@ public class VentanaJuego extends javax.swing.JFrame {
     int counter = 0;
     
     BufferedImage buffer = null;
+    BufferedImage template = null;
+    Image[] images = new Image[30];
     
     Timer temp = new Timer(10, new ActionListener() {
         @Override
@@ -51,6 +58,16 @@ public class VentanaJuego extends javax.swing.JFrame {
      */
     public VentanaJuego() {
         initComponents();
+        try {
+            template = ImageIO.read(getClass().getResource("/imagenes/invaders2.png"));
+        } catch (IOException ex) {
+            System.out.println("Unable to read invaders2 image");
+        }
+        for (int i = 0; i < 5; i++){
+            for (int j = 0; j < 4; j++){
+                images[i*4 + j] = template.getSubimage(j * 64, i * 64, 64, 64).getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+            }
+        }
         setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         buffer = (BufferedImage) jPanel1.createImage(SCREEN_WIDTH, SCREEN_HEIGHT);
         buffer.createGraphics();
@@ -63,6 +80,8 @@ public class VentanaJuego extends javax.swing.JFrame {
         for (int i = 0; i < alienRow; i++) {
             for (int j = 0; j < alienColumn; j++) {
                 alienList[i][j] = new Alien(SCREEN_WIDTH);
+                alienList[i][j].image1 = images[2];
+                alienList[i][j].image2 = images[3];
                 alienList[i][j].posX = j * (15 + alienList[i][j].image1.getWidth(null));
                 alienList[i][j].posY = i * (10 + alienList[i][j].image1.getHeight(null));
             }
@@ -83,7 +102,7 @@ public class VentanaJuego extends javax.swing.JFrame {
                 else{
                     counter = 0;
                 }
-                if (alienList[i][j].posX == SCREEN_WIDTH - alienList[i][j].image1.getWidth(null) - myAlien.image1.getWidth(null)/3 || alienList [i][j].posX == 0){
+                if (alienList[i][j].posX == SCREEN_WIDTH - alienList[i][j].image1.getWidth(null) - alienList[i][j].image1.getWidth(null) / 3 || alienList [i][j].posX == 0){
                     alienDirection = !alienDirection;
                     for (int k = 0; k < alienRow; k++){
                         for (int m = 0; m < alienColumn; m++){

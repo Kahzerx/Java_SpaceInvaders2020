@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import javax.swing.Timer;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Rectangle2D; 
 
 
 /**
@@ -66,6 +67,7 @@ public class VentanaJuego extends javax.swing.JFrame {
                 alienList[i][j].posY = i * (10 + alienList[i][j].image1.getHeight(null));
             }
         }
+        myShot.posY = -2000;
     }
     
     private void drawAlien(Graphics2D g2){
@@ -105,9 +107,25 @@ public class VentanaJuego extends javax.swing.JFrame {
         g2.drawImage(myShot.image, myShot.posX, myShot.posY, null);
         myShip.move();
         myShot.move();
+        collision();
         
         g2 = (Graphics2D) jPanel1.getGraphics();
         g2.drawImage(buffer, 0, 0, null);
+    }
+    
+    private void collision(){
+        Rectangle2D.Double alienRect = new Rectangle2D.Double();
+        Rectangle2D.Double shotRect = new Rectangle2D.Double();
+        shotRect.setFrame(myShot.posX, myShot.posY, myShot.image.getWidth(null), myShot.image.getHeight(null));
+        for(int i=0; i<alienRow; i++){
+            for (int j=0; j<alienColumn; j++){
+                alienRect.setFrame(alienList[i][j].posX, alienList[i][j].posY, alienList[i][j].image1.getWidth(null), alienList[i][j].image1.getHeight(null));
+                if (shotRect.intersects(alienRect)){
+                    alienList[i][j].posY = 2000;
+                    myShot.posY = -2000;
+                }
+            }
+        }
     }
 
     /**

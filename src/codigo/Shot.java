@@ -26,7 +26,7 @@ public class Shot {
         }
     }
     public void move(){        
-        posY--;
+        posY -= 5;
     }
     
     public void posDisparo(Ship _ship){

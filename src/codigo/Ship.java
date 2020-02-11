@@ -27,11 +27,11 @@ public class Ship {
     }
     
     public void move(){
-        if (leftPressed){
-            posX--;
+        if (leftPressed && posX > 0){
+            posX -= 3;
         }
-        if (rightPressed){
-            posX++;
+        if (rightPressed && posX < VentanaJuego.SCREEN_WIDTH - image.getWidth(null)){
+            posX += 3;
         }      
     }
 

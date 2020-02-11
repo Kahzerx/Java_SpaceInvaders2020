@@ -12,16 +12,19 @@ import javax.imageio.ImageIO;
  *
  * @author kahzerx
  */
-public class Marciano {
+public class Alien {
     
     public Image image1 = null;
     public Image image2 = null;
+    
+    public int posX = 0;
+    public int posY = 0;
     
     private int screenWidth;
     
     public int life = 50;
     
-    public Marciano (int _screenWidth){
+    public Alien (int _screenWidth){
         screenWidth = _screenWidth;
         try {
             image1 = ImageIO.read(getClass().getResource("/imagenes/marcianito1.png"));
@@ -30,6 +33,15 @@ public class Marciano {
         
         catch (Exception e) {
             System.out.println("Unable to read Alien image.");
+        }
+    }
+    
+    public void move (boolean direction){
+        if (direction){
+            posX++;
+        }
+        else{
+            posX--;
         }
     }
     

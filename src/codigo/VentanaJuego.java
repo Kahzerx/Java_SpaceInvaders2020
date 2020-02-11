@@ -38,9 +38,12 @@ public class VentanaJuego extends javax.swing.JFrame {
         }
     });
     
-    Marciano myAlien = new Marciano(SCREEN_WIDTH);
+    Alien myAlien = new Alien(SCREEN_WIDTH);
     Ship myShip = new Ship();
     Shot myShot = new Shot();
+    
+    Alien[][] alienList = new Alien[alienRow][alienColumn];
+    boolean alienDirection = true;
     
     /**
      * Creates new form VentanaJuego
@@ -55,6 +58,39 @@ public class VentanaJuego extends javax.swing.JFrame {
         
         myShip.posX = SCREEN_WIDTH /2 - myShip.image.getWidth(this)/2;
         myShip.posY = SCREEN_HEIGHT - 100;
+        
+        for (int i = 0; i < alienRow; i++) {
+            for (int j = 0; j < alienColumn; j++) {
+                alienList[i][j] = new Alien(SCREEN_WIDTH);
+                alienList[i][j].posX = j * (15 + alienList[i][j].image1.getWidth(null));
+                alienList[i][j].posY = i * (10 + alienList[i][j].image1.getHeight(null));
+            }
+        }
+    }
+    
+    private void drawAlien(Graphics2D g2){
+        for (int i = 0; i < alienRow; i++) {
+            for (int j = 0; j < alienColumn; j++) {
+                alienList[i][j].move(alienDirection);
+                if (counter < 50){
+                    g2.drawImage(alienList[i][j].image1, alienList[i][j].posX, alienList[i][j].posY, null);
+                }
+                else if (counter < 100){
+                    g2.drawImage(alienList[i][j].image2, alienList[i][j].posX, alienList[i][j].posY, null);
+                }
+                else{
+                    counter = 0;
+                }
+                if (alienList[i][j].posX == SCREEN_WIDTH - alienList[i][j].image1.getWidth(null) - myAlien.image1.getWidth(null)/3 || alienList [i][j].posX == 0){
+                    alienDirection = !alienDirection;
+                    for (int k = 0; k < alienRow; k++){
+                        for (int m = 0; m < alienColumn; m++){
+                            alienList[k][m].posY += alienList[k][m].image1.getHeight(null);
+                        }
+                    }
+                }
+            }
+        }
     }
     
     private void gameLoop(){
@@ -62,15 +98,8 @@ public class VentanaJuego extends javax.swing.JFrame {
         g2.setColor(Color.BLACK);
         g2.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         counter ++;
-        if (counter < 50){
-            g2.drawImage(myAlien.image1, 10, 10, null);
-        }
-        else if(counter < 100){
-            g2.drawImage(myAlien.image2, 10, 10, null);
-        }
-        else{
-            counter = 0;
-        }
+        
+        drawAlien(g2);
         
         g2.drawImage(myShip.image, myShip.posX, myShip.posY, null);
         g2.drawImage(myShot.image, myShot.posX, myShot.posY, null);

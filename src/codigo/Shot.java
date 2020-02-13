@@ -29,7 +29,7 @@ public class Shot {
         posY -= 5;
     }
     
-    public void posDisparo(Ship _ship){
+    public void posShot(Ship _ship){
 
         posX=_ship.posX+_ship.image.getWidth(null)/2-image.getWidth(null)/2;
         posY=_ship.posY-image.getHeight(null)/2;

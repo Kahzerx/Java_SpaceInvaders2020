@@ -15,8 +15,7 @@ import javax.swing.Timer;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D; 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 
@@ -49,6 +48,8 @@ public class VentanaJuego extends javax.swing.JFrame {
     Alien myAlien = new Alien(SCREEN_WIDTH);
     Ship myShip = new Ship();
     Shot myShot = new Shot();
+    ArrayList<Shot> shotList = new ArrayList();
+    ArrayList <Explosion> explosionList = new ArrayList();
     
     Alien[][] alienList = new Alien[alienRow][alienColumn];
     boolean alienDirection = true;
@@ -71,6 +72,8 @@ public class VentanaJuego extends javax.swing.JFrame {
         
         images[20] = template.getSubimage(0, 320, 66, 32);
         images[21] = template.getSubimage(66, 320, 64, 32);
+        images[23] = template.getSubimage(255, 320, 32, 32);
+        images[22] = template.getSubimage(255, 289, 32, 32);
         
         setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         buffer = (BufferedImage) jPanel1.createImage(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -120,6 +123,38 @@ public class VentanaJuego extends javax.swing.JFrame {
         }
     }
     
+    private void drawShots (Graphics2D g2){
+        Shot auxShot;
+        for (int i = 0; i < shotList.size(); i++){
+            auxShot = shotList.get(i);
+            auxShot.move();
+            
+            if (auxShot.posY < 0){
+                shotList.remove(i);
+            }
+            else{
+                g2.drawImage(auxShot.image, auxShot.posX, auxShot.posY, null);
+            }
+        }
+    }
+    
+    private void drawExplosions (Graphics2D g2){
+        Explosion auxExplosion;
+        for (int i=0; i< explosionList.size(); i++){
+            auxExplosion = explosionList.get(i);
+            auxExplosion.lifeTime --;
+            if (auxExplosion.lifeTime > 12){
+                g2.drawImage(auxExplosion.image1, auxExplosion.posX, auxExplosion.posY, null);
+            }
+            else{
+                g2.drawImage(auxExplosion.image2, auxExplosion.posX, auxExplosion.posY, null);
+            }
+            if (auxExplosion.lifeTime <= 0){
+                explosionList.remove(i);
+            }
+        }
+    }
+    
     private void gameLoop(){
         Graphics2D g2 = (Graphics2D) buffer.getGraphics();
         g2.setColor(Color.BLACK);
@@ -129,9 +164,10 @@ public class VentanaJuego extends javax.swing.JFrame {
         drawAlien(g2);
         
         g2.drawImage(myShip.image, myShip.posX, myShip.posY, null);
-        g2.drawImage(myShot.image, myShot.posX, myShot.posY, null);
+        drawShots(g2);
+        drawExplosions(g2);
         myShip.move();
-        myShot.move();
+        
         collision();
         
         g2 = (Graphics2D) jPanel1.getGraphics();
@@ -141,13 +177,22 @@ public class VentanaJuego extends javax.swing.JFrame {
     private void collision(){
         Rectangle2D.Double alienRect = new Rectangle2D.Double();
         Rectangle2D.Double shotRect = new Rectangle2D.Double();
-        shotRect.setFrame(myShot.posX, myShot.posY, myShot.image.getWidth(null), myShot.image.getHeight(null));
-        for(int i=0; i<alienRow; i++){
-            for (int j=0; j<alienColumn; j++){
-                alienRect.setFrame(alienList[i][j].posX, alienList[i][j].posY, alienList[i][j].image1.getWidth(null), alienList[i][j].image1.getHeight(null));
-                if (shotRect.intersects(alienRect)){
-                    alienList[i][j].posY = 2000;
-                    myShot.posY = -2000;
+        for (int k = 0; k < shotList.size();k++){
+            shotRect.setFrame(shotList.get(k).posX, shotList.get(k).posY, shotList.get(k).image.getWidth(null), shotList.get(k).image.getHeight(null));
+            for(int i=0; i<alienRow; i++){
+                for (int j=0; j<alienColumn; j++){
+                    alienRect.setFrame(alienList[i][j].posX, alienList[i][j].posY, alienList[i][j].image1.getWidth(null), alienList[i][j].image1.getHeight(null));
+                    if (shotRect.intersects(alienRect)){
+                        Explosion e = new Explosion();
+                        e.posX = alienList[i][j].posX;
+                        e.posY = alienList[i][j].posY;
+                        e.image1 = images[23];
+                        e.image2 = images[22];
+                        explosionList.add(e);
+                        
+                        alienList[i][j].posY = 2000;
+                        shotList.remove(k);
+                    }
                 }
             }
         }
@@ -203,7 +248,11 @@ public class VentanaJuego extends javax.swing.JFrame {
         switch(evt.getKeyCode()){
             case KeyEvent.VK_LEFT : myShip.setLeftPressed(true); break;
             case KeyEvent.VK_RIGHT : myShip.setRightPressed(true); break;
-            case KeyEvent.VK_SPACE : myShot.posX = myShip.posX;myShot.posY = myShip.posY;break;
+            case KeyEvent.VK_SPACE : 
+                Shot s = new Shot();
+                s.posShot(myShip);
+                shotList.add(s);
+                break;
         }
     }//GEN-LAST:event_formKeyPressed
     private void formKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyReleased

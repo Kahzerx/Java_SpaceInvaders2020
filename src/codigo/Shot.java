@@ -36,14 +36,9 @@ public class Shot {
     public Shot(){
         try{
             image=ImageIO.read(getClass().getResource("/imagenes/disparo.png"));
-            shotSound = AudioSystem.getClip();
-            shotSound.open(AudioSystem.getAudioInputStream(getClass().getResource("/sound/laser.wav")));
         }
         catch(IOException e){
             System.out.println(e + "Unable to read Shot image");
-        }
-        catch(LineUnavailableException | UnsupportedAudioFileException e){
-            System.out.println(e + "Unable to initialize shot audio");
         }
     }
 }

@@ -16,6 +16,8 @@ import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 
 
 /**
@@ -154,6 +156,17 @@ public class VentanaJuego extends javax.swing.JFrame {
         }
     }
     
+    private void play(String sound, int loop) {
+        try {
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(getClass().getResource(sound)));
+            Thread.sleep(200);
+            clip.loop(loop);
+            clip.stop();
+        } catch (Exception e) {
+        }
+    }
+    
     private void gameLoop(){
         Graphics2D g2 = (Graphics2D) buffer.getGraphics();
         if (!gameOver){
@@ -197,7 +210,7 @@ public class VentanaJuego extends javax.swing.JFrame {
                         e.image1 = images[23];
                         e.image2 = images[22];
                         explosionList.add(e);
-                        e.explosionSound.start();
+                        play("/sound/explosion.wav", 0);
                         alienList[i][j].posY = 2000;
                         shotList.remove(k);
                         score ++;
@@ -275,7 +288,7 @@ public class VentanaJuego extends javax.swing.JFrame {
             case KeyEvent.VK_SPACE : 
                 if(!alrShot){
                     Shot s = new Shot();
-                    s.shotSound.start();
+                    play("/sound/laser.wav", 0);
                     s.posShot(myShip);
                     shotList.add(s);
                     alrShot = true;
@@ -295,7 +308,7 @@ public class VentanaJuego extends javax.swing.JFrame {
 
     /**
      * @param args the command line arguments
-     */
+     */ 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

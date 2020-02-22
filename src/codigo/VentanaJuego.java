@@ -27,11 +27,13 @@ public class VentanaJuego extends javax.swing.JFrame {
     static int SCREEN_WIDTH = 800;
     static int SCREEN_HEIGHT = 600;
     
-    int alienRow = 5;
+    int alienRow = 6;
     int alienColumn = 10;
     int counter = 0;
+    int score = 0;
     
     boolean alrShot = false;
+    boolean gameOver = false;
     
     BufferedImage buffer = null;
     BufferedImage template = null;
@@ -154,26 +156,35 @@ public class VentanaJuego extends javax.swing.JFrame {
     
     private void gameLoop(){
         Graphics2D g2 = (Graphics2D) buffer.getGraphics();
-        g2.setColor(Color.BLACK);
-        g2.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        counter ++;
-        
-        drawAlien(g2);
-        
-        g2.drawImage(myShip.image, myShip.posX, myShip.posY, null);
-        drawShots(g2);
-        drawExplosions(g2);
-        myShip.move();
-        
-        collision();
-        
-        g2 = (Graphics2D) jPanel1.getGraphics();
-        g2.drawImage(buffer, 0, 0, null);
+        if (!gameOver){
+            g2.setColor(Color.BLACK);
+            g2.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            counter ++;
+
+            drawAlien(g2);
+
+            g2.drawImage(myShip.image, myShip.posX, myShip.posY, null);
+            drawShots(g2);
+            drawExplosions(g2);
+            myShip.move();
+
+            collision();
+
+            g2 = (Graphics2D) jPanel1.getGraphics();
+            g2.drawImage(buffer, 0, 0, null);
+        }
+        else{
+            end(g2);
+        }
     }
     
     private void collision(){
+        //marco para el borde del marciano
         Rectangle2D.Double alienRect = new Rectangle2D.Double();
+        //marco para el borde del disparo
         Rectangle2D.Double shotRect = new Rectangle2D.Double();
+        //marco para el borde de la nave
+        
         for (int k = 0; k < shotList.size();k++){
             shotRect.setFrame(shotList.get(k).posX, shotList.get(k).posY, shotList.get(k).image.getWidth(null), shotList.get(k).image.getHeight(null));
             for(int i=0; i<alienRow; i++){
@@ -189,9 +200,25 @@ public class VentanaJuego extends javax.swing.JFrame {
                         e.explosionSound.start();
                         alienList[i][j].posY = 2000;
                         shotList.remove(k);
+                        score ++;
+                        if (score >= alienColumn * alienRow) gameOver = true;
                     }
+
                 }
             }
+        }
+    }
+    
+    private void end (Graphics2D gameOver){
+        try {
+            gameOver.setColor(Color.BLACK);
+            gameOver.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            Image gameOverImage = ImageIO.read((getClass().getResource("/imagenes/gameOver.png")));
+            gameOver.drawImage(gameOverImage, SCREEN_WIDTH/2 - gameOverImage.getWidth(this)/2 , SCREEN_HEIGHT/2 - gameOverImage.getHeight(this), null);
+            gameOver = (Graphics2D) jPanel1.getGraphics();
+            gameOver.drawImage(buffer, 0, 0, null);
+        } catch (IOException e) {
+            System.err.println(e + "Unable to load gameOver image");
         }
     }
 

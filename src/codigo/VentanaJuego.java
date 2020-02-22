@@ -31,6 +31,8 @@ public class VentanaJuego extends javax.swing.JFrame {
     int alienColumn = 10;
     int counter = 0;
     
+    boolean alrShot = false;
+    
     BufferedImage buffer = null;
     BufferedImage template = null;
     Image[] images = new Image[30];
@@ -244,10 +246,13 @@ public class VentanaJuego extends javax.swing.JFrame {
             case KeyEvent.VK_LEFT : myShip.setLeftPressed(true); break;
             case KeyEvent.VK_RIGHT : myShip.setRightPressed(true); break;
             case KeyEvent.VK_SPACE : 
-                Shot s = new Shot();
-                s.shotSound.start();
-                s.posShot(myShip);
-                shotList.add(s);
+                if(!alrShot){
+                    Shot s = new Shot();
+                    s.shotSound.start();
+                    s.posShot(myShip);
+                    shotList.add(s);
+                    alrShot = true;
+                }
                 break;
         }
     }//GEN-LAST:event_formKeyPressed
@@ -255,6 +260,7 @@ public class VentanaJuego extends javax.swing.JFrame {
         switch(evt.getKeyCode()){
             case KeyEvent.VK_LEFT : myShip.setLeftPressed(false); break;
             case KeyEvent.VK_RIGHT : myShip.setRightPressed(false); break;
+            case KeyEvent.VK_SPACE : alrShot = false; break;
 
         }
     }//GEN-LAST:event_formKeyReleased

@@ -5,7 +5,12 @@
  */
 package codigo;
 import java.awt.Image;
+import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  *
@@ -16,15 +21,9 @@ public class Shot {
 
     public int posX=0;
     public int posY=0;
+    Clip shotSound;
     
-    public Shot(){
-        try{
-            image=ImageIO.read(getClass().getResource("/imagenes/disparo.png"));
-        }
-        catch(Exception e){
-            System.out.println("Unable to read Shot image");
-        }
-    }
+
     public void move(){        
         posY -= 5;
     }
@@ -33,5 +32,18 @@ public class Shot {
 
         posX=_ship.posX+_ship.image.getWidth(null)/2-image.getWidth(null)/2;
         posY=_ship.posY-image.getHeight(null)/2;
+    }
+    public Shot(){
+        try{
+            image=ImageIO.read(getClass().getResource("/imagenes/disparo.png"));
+            shotSound = AudioSystem.getClip();
+            shotSound.open(AudioSystem.getAudioInputStream(getClass().getResource("/sound/laser.wav")));
+        }
+        catch(IOException e){
+            System.out.println(e + "Unable to read Shot image");
+        }
+        catch(LineUnavailableException | UnsupportedAudioFileException e){
+            System.out.println(e + "Unable to initialize shot audio");
+        }
     }
 }

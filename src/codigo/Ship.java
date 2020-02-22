@@ -2,7 +2,6 @@
 package codigo;
 
 import java.awt.Image;
-import javax.imageio.ImageIO;
 
 /**
  *

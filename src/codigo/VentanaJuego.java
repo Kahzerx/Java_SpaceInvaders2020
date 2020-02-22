@@ -9,7 +9,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import javax.swing.Timer;
 import java.awt.event.KeyEvent;
@@ -36,13 +35,9 @@ public class VentanaJuego extends javax.swing.JFrame {
     BufferedImage template = null;
     Image[] images = new Image[30];
     
-    Timer temp = new Timer(10, new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            //TODO : animation code
-            gameLoop();
-            
-        }
+    Timer temp = new Timer(10, (ActionEvent e) -> {
+        //TODO : animation code
+        gameLoop();
     });
     
     Alien myAlien = new Alien(SCREEN_WIDTH);
@@ -189,7 +184,7 @@ public class VentanaJuego extends javax.swing.JFrame {
                         e.image1 = images[23];
                         e.image2 = images[22];
                         explosionList.add(e);
-                        
+                        e.explosionSound.start();
                         alienList[i][j].posY = 2000;
                         shotList.remove(k);
                     }
@@ -250,6 +245,7 @@ public class VentanaJuego extends javax.swing.JFrame {
             case KeyEvent.VK_RIGHT : myShip.setRightPressed(true); break;
             case KeyEvent.VK_SPACE : 
                 Shot s = new Shot();
+                s.shotSound.start();
                 s.posShot(myShip);
                 shotList.add(s);
                 break;
@@ -292,10 +288,8 @@ public class VentanaJuego extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new VentanaJuego().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new VentanaJuego().setVisible(true);
         });
     }
 

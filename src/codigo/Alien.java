@@ -6,8 +6,6 @@
 package codigo;
 
 import java.awt.Image;
-import javax.imageio.ImageIO;
-
 /**
  *
  * @author kahzerx
@@ -20,10 +18,14 @@ public class Alien {
     public int posX = 0;
     public int posY = 0;
     
-    private int screenWidth;
+    private final int screenWidth;
     
     public int life = 50;
     
+    /**
+     *
+     * @param _screenWidth
+     */
     public Alien (int _screenWidth){
         screenWidth = _screenWidth;
     }
